@@ -3,60 +3,67 @@
 #include <WinSock2.h> //сокеты 
 #include <WS2tcpip.h> //функции для сервера 
 #pragma comment(lib, "ws2_32.lib")
-using namespace std;
 
-SOCKET Connect;
-SOCKET * Connections;
-SOCKET Listen;
-int ClientCount = 0;
+using namespace std;
 
 int main()
 {
-	WSAData data;
-	WORD version = MAKEWORD(2,2); //указываем версию
+	SOCKET s;//Для сервера
+	SOCKET connect;//Для клиента
 
-	int res = WSAStartup(version, &data);
-	if (res != 0)
+	//Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
+	WSADATA WsaData;
+	int err = WSAStartup(0x0101, &WsaData); //0х0101 - версия
+	if (err == SOCKET_ERROR)
 	{
-		return 0;
+		cout << "Error";
+		return 1;
+	}
+	//Теперь объявление переменную типа SOCKET
+	s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	//Задаем параметры для сокета(сервера)
+	SOCKADDR_IN sin;
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(7770);
+	sin.sin_addr.s_addr = INADDR_ANY;
+
+	//Запускаем сервер
+	err = bind(s, (LPSOCKADDR)&sin, sizeof(sin));
+	if (err == 0)
+	{
+		cout << "Server starting..." << endl;
+	}
+	else
+	{
+		cout << "Error";
+		return 1;
 	}
 
-	struct addrinfo hints;
-	struct addrinfo * result;
-
-	ZeroMemory(&hints, sizeof(hints));
-
-    Connections = new SOCKET[64*sizeof(SOCKET)];
-
-	hints.ai_family = AF_INET;
-	hints.ai_flags = AI_PASSIVE;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
-
-	getaddrinfo(nullptr, "7770", &hints, &result);
-
-	Listen = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	bind(Listen, result->ai_addr, result->ai_addrlen);
-
-	listen(Listen, SOMAXCONN);
-
-	freeaddrinfo(result);
-
-	cout << "Server starting...\n";
-	char m_connect[] = "Connect - OK";
-
-	for (;;Sleep(75))
+	//Ждем подключений 
+	err = listen(s, SOMAXCONN);
+	if (err == 0)
 	{
-		if (Connect = accept(Listen, nullptr, nullptr))
+		cout << "Listening..." << endl;
+	}
+	else
+	{
+		cout << "Error";
+		return 1;
+	}
+
+	//Обработка подключений
+	char m_connect[] = "Connect - OK"; //Сообщение для клиента
+	/*for (;;Sleep(75))
+	{
+		if (connect = accept(s, nullptr, nullptr))
 		{
-			cout << "Client connect...\n";
-			Connections[ClientCount] = Connect;
-			send(Connections[ClientCount], m_connect, sizeof(m_connect), NULL);
-			ClientCount++;
+			cout << "Client is connected..." << endl;
+			//send(connect, m_connect, sizeof(m_connect), NULL);
 		}
-	}
-
-	system("pause");
+	}*/
+	connect = accept(s, nullptr, nullptr);
+	cout << "+";
 }
 
 
