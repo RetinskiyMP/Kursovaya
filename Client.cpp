@@ -28,10 +28,29 @@ int main()
 	//sin.sin_addr.s_addr = inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr));
 	inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr));
 	
-
-	cout << "+";
 	connect(s, (struct sockaddr*)&sin, sizeof(sin));
-	cout << "+";
+	
+	char buff[BUFSIZ];
+	int nsize;
+
+	while ((nsize = recv(s, &buff[0], sizeof(buff) - 1, 0)) != SOCKET_ERROR)
+	{
+		// ставим завершающий ноль в конце строки
+		buff[nsize] = 0;
+
+		// выводим на экран
+		printf("S=>C:%s", buff);
+
+		// читаем пользовательский ввод с клавиатуры
+		printf("S<=C:"); fgets(&buff[0], sizeof(buff) - 1, stdin);
+
+		
+
+		// передаем строку клиента серверу
+		send(s, &buff[0], strlen(&buff[0]), 0);
+	}
+
+
 
 	return 0;
 }
