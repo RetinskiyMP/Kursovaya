@@ -6,10 +6,36 @@
 
 using namespace std;
 
+DWORD WINAPI Func(LPVOID client_socket)
+{
+	SOCKET my_sock;
+	my_sock = ((SOCKET *)client_socket)[0];
+	char buff[BUFSIZ];//char buff[20 * 1024];
+#define sHELLO "SOCKET PODKLUCHEN\r\n"
+
+// отправляем клиенту приветствие
+	send(my_sock, sHELLO, sizeof(sHELLO), 0);
+
+	// цикл эхо-сервера: прием строки от клиента и возвращение ее клиенту
+	int bytes_recv;
+	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
+		bytes_recv != SOCKET_ERROR)
+		//*tmp_buff = buff[0];
+		//changeWords();
+
+		send(my_sock, &buff[0], bytes_recv, 0);
+
+	// если мы здесь, то произошел выход из цикла по причине
+	// возращения функцией recv ошибки - соединение с клиентом разорвано
+	
+		// закрываем сокет
+		closesocket(my_sock);
+	return 0;
+}
+
 int main()
 {
 	SOCKET s;//Для сервера
-	SOCKET connect;//Для клиента
 
 	//Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
 	WSADATA WsaData;
@@ -20,7 +46,7 @@ int main()
 		return 1;
 	}
 	//Теперь объявление переменную типа SOCKET
-	s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	s = socket(AF_INET, SOCK_STREAM, 0);
 
 	//Задаем параметры для сокета(сервера)
 	SOCKADDR_IN sin;
@@ -53,19 +79,20 @@ int main()
 	}
 
 	//Обработка подключений
-	char m_connect[] = "Connect - OK"; //Сообщение для клиента
-	/*for (;;Sleep(75))
+	SOCKET client_socket; // сокет для клиента
+	sockaddr_in client_addr; // адрес клиента (заполняется системой)
+
+	int client_addr_size = sizeof(client_addr);
+	char buffer[] = "connect - ok";
+
+	while ((client_socket = accept(s, (sockaddr *)&client_addr, \
+		&client_addr_size)))
 	{
-		if (connect = accept(s, nullptr, nullptr))
-		{
-			cout << "Client is connected..." << endl;
-			//send(connect, m_connect, sizeof(m_connect), NULL);
-		}
-	}*/
-	connect = accept(s, nullptr, nullptr);
-	cout << "+";
+		cout << "Client is connected.";
+
+		DWORD thID;
+		CreateThread(NULL, NULL, Func, &client_socket, NULL, &thID);
+
+		send(s, buffer, sizeof(buffer), NULL);
+	}
 }
-
-
-
-
