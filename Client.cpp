@@ -6,33 +6,40 @@
 
 using namespace std;
 
-int main()
+class Client
 {
+protected:
 	SOCKET s;
-
-	//Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
 	WSADATA WsaData;
-	int err = WSAStartup(0x0101, &WsaData); //0х0101 - версия
-	if (err == SOCKET_ERROR)
-	{
-		cout << "Error";
-		return 1;
-	}
-	//Теперь объявление переменную типа SOCKET
-	s = socket(AF_INET, SOCK_STREAM, 0);
-
-	//Задаем параметры для сокета(сервера)
 	SOCKADDR_IN sin;
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(7770);
-	//sin.sin_addr.s_addr = inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr));
-	inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr));
-	
-	connect(s, (struct sockaddr*)&sin, sizeof(sin));
-	
 	char buff[BUFSIZ];
 	int nsize;
+public:
+	void GetClientSettings();
+	void ConnectToServer();
+	void Сommunication();
 
+};
+
+void Client::GetClientSettings()
+{
+	WSAStartup(0x0101, &WsaData); //Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
+
+	s = socket(AF_INET, SOCK_STREAM, 0); //Теперь объявление переменную типа SOCKET
+
+	//Задаем параметры для сокета(сервера)
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(7770);
+	inet_pton(AF_INET, "127.0.0.1", &(sin.sin_addr));
+}
+
+void Client::ConnectToServer()
+{
+	connect(s, (struct sockaddr*)&sin, sizeof(sin));
+}
+
+void Client::Сommunication()
+{
 	while ((nsize = recv(s, &buff[0], sizeof(buff) - 1, 0)) != SOCKET_ERROR)
 	{
 		// ставим завершающий ноль в конце строки
@@ -44,13 +51,21 @@ int main()
 		// читаем пользовательский ввод с клавиатуры
 		printf("S<=C:"); fgets(&buff[0], sizeof(buff) - 1, stdin);
 
-		
-
 		// передаем строку клиента серверу
 		send(s, &buff[0], strlen(&buff[0]), 0);
 	}
+}
 
+int main()
+{
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
 
+	Client Client1;
+
+	Client1.GetClientSettings();
+	Client1.ConnectToServer();
+	Client1.Сommunication();
 
 	return 0;
 }
