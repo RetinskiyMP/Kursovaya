@@ -1,14 +1,16 @@
-#include "pch.h"
 #include <iostream>
+#include <string>
 #include <WinSock2.h> //сокеты 
 #include <WS2tcpip.h> //функции для сервера 
+#include "sqlite3.h"
+#pragma comment(lib, "sqlite3.lib")
 #pragma comment(lib, "ws2_32.lib")
 
 using namespace std;
 
 class Server
 {
-protected:
+private:
 	SOCKET s;//Для сервера
 	WSADATA WsaData;
 	SOCKADDR_IN sin;
@@ -20,6 +22,7 @@ public:
 	void GetServerSettings();
 	void StartServer();
 	void StartListenning();
+	static string ShowDB(sqlite3 *);
 	static DWORD WINAPI Func(LPVOID);
 };
 
@@ -64,25 +67,88 @@ void Server::StartListenning()
 		DWORD thID;
 		CreateThread(NULL, NULL, Func, &client_socket, NULL, &thID);
 	}
+}
 
+string Server::ShowDB(sqlite3 *db)
+{
+	string DATA = "";
+	sqlite3_stmt *stmt;
+	char query1[] = "SELECT * FROM flights;";
+	char query2[] = "SELECT * FROM passengers;";
+	DATA += "Flights:\n";
+	if (sqlite3_prepare_v2(db, query1, -1, &stmt, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
+		{
+			char *id = (char *)sqlite3_column_text(stmt, 0);
+			DATA += id;
+			DATA += "|";
+			char *from_point = (char *)sqlite3_column_text(stmt, 1);
+			DATA += from_point;
+			DATA += "|";
+			char *to_point = (char *)sqlite3_column_text(stmt, 2);
+			DATA += to_point;
+			DATA += "|";
+			char *date = (char *)sqlite3_column_text(stmt, 3);
+			DATA += date;
+			DATA += "|";
+			char *time = (char *)sqlite3_column_text(stmt, 4);
+			DATA += time;
+			DATA += "|\n";
+		}
+	}
+	DATA += "Passengers:\n";
+	if (sqlite3_prepare_v2(db, query2, -1, &stmt, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
+		{
+			char *id = (char *)sqlite3_column_text(stmt, 0);
+			DATA += id;
+			DATA += "|";
+			char *id1 = (char *)sqlite3_column_text(stmt, 1);
+			DATA += id1;
+			DATA += "|";
+			char *name1 = (char *)sqlite3_column_text(stmt, 2);
+			DATA += name1;
+			DATA += "|";
+			char *name2 = (char *)sqlite3_column_text(stmt, 3);
+			DATA += name2;
+			DATA += "|";
+			char *age = (char *)sqlite3_column_text(stmt, 4);
+			DATA += age;
+			DATA += "|\n";
+		}
+	}
+	return DATA;
 }
 
 DWORD WINAPI Server::Func(LPVOID client_socket)
 {
+	//подключение клиента к бд
+	sqlite3 *db; // хэндл объекта соединение к БД
+	if (sqlite3_open("database.dblite", &db))
+		fprintf(stderr, "Ошибка открытия/создания БД: %s\n", sqlite3_errmsg(db));
+	else cout << "Клиент успешно подключен к БД.\n";
+
+	//получение сокета клиента
 	SOCKET my_sock;
 	my_sock = ((SOCKET *)client_socket)[0];
-	char buff[BUFSIZ]; //char buff[20 * 1024];
-#define sHELLO "Сокет подключен\r\n"
 
-// отправляем клиенту приветствие
-	send(my_sock, sHELLO, sizeof(sHELLO), 0);
+	//Общение с клиентом
+	char buff[BUFSIZ]; //char buff[20 * 1024];
+    #define hi "Успешное подлкючение к серверу...\n"
+	send(my_sock, hi, sizeof(hi), 0);
 
 	// цикл эхо-сервера: прием строки от клиента и возвращение ее клиенту
 	int bytes_recv;
 	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
 		bytes_recv != SOCKET_ERROR)
 	{
-		send(my_sock, &buff[0], bytes_recv, 0);
+		if (buff[0] == '1')
+		{
+			string a = ShowDB(db);
+			send(my_sock, a.c_str(), a.length(), 0);
+		}
 	}
 
 	cout << "Соединение с сокетом клиента [" << my_sock << "] разорвано." << endl;
@@ -98,10 +164,14 @@ int main()
 {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
-
+	
 	Server Server1;
-
+	//Получаем настройки сокета для сервера
 	Server1.GetServerSettings();
+	//Запускаем сервер
 	Server1.StartServer();
+	//Начинаем обработку подключений
 	Server1.StartListenning();
+	
+	
 }
