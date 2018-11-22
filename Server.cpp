@@ -75,7 +75,7 @@ string Server::ShowDB(sqlite3 *db)
 	sqlite3_stmt *stmt;
 	char query1[] = "SELECT * FROM flights;";
 	char query2[] = "SELECT * FROM passengers;";
-	DATA += "Flights:\n";
+	DATA += "Flights:\n\r";
 	if (sqlite3_prepare_v2(db, query1, -1, &stmt, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
@@ -128,33 +128,36 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 	sqlite3 *db; // хэндл объекта соединение к БД
 	if (sqlite3_open("database.dblite", &db))
 		fprintf(stderr, "Ошибка открытия/создания БД: %s\n", sqlite3_errmsg(db));
-	else cout << "Клиент успешно подключен к БД.\n";
-
+	
 	//получение сокета клиента
 	SOCKET my_sock;
 	my_sock = ((SOCKET *)client_socket)[0];
 
 	//Общение с клиентом
 	char buff[BUFSIZ]; //char buff[20 * 1024];
-    #define hi "Успешное подлкючение к серверу...\n"
+    #define hi "You are connected to server...\n"
 	send(my_sock, hi, sizeof(hi), 0);
 
-	// цикл эхо-сервера: прием строки от клиента и возвращение ее клиенту
 	int bytes_recv;
 	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
 		bytes_recv != SOCKET_ERROR)
 	{
+		if (buff[0] == '0')
+		{
+			cout << "Соединение с сокетом клиента [" << my_sock << "] разорвано." << endl;
+			closesocket(my_sock);
+			return 0;
+		}
 		if (buff[0] == '1')
 		{
 			string a = ShowDB(db);
 			send(my_sock, a.c_str(), a.length(), 0);
 		}
-	}
 
+	}
 	cout << "Соединение с сокетом клиента [" << my_sock << "] разорвано." << endl;
 	// если мы здесь, то произошел выход из цикла по причине
 	// возращения функцией recv ошибки - соединение с клиентом разорвано
-
 	// закрываем сокет
 	closesocket(my_sock);
 	return 0;
