@@ -1,0 +1,11 @@
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\bin\Debug\ClientNET.exe.config
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\bin\Debug\ClientNET.exe
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\bin\Debug\ClientNET.pdb
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.Client.resources
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.Properties.Resources.resources
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.csproj.GenerateResource.cache
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.csproj.CoreCompileInputs.cache
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.exe
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.pdb
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.csprojAssemblyReference.cache
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.Form2.resources
