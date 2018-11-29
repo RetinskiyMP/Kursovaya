@@ -95,12 +95,12 @@ namespace ClientNET
         }
 
         private void ShowDB_Click(object sender, EventArgs e)
-        {
+        { //тут просто тру блок, вообще его на весь код в любой функции над
             string s = "1";
             byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
             stream.Write(data, 0, data.Length);
 
-            byte[] data2 = new byte[256];
+            byte[] data2 = new byte[1024];
             int bytes = stream.Read(data2, 0, data2.Length); // получаем количество считанных байтов
             string message = Encoding.ASCII.GetString(data2, 0, bytes);
             chatBox.AppendText(message);
@@ -125,13 +125,73 @@ namespace ClientNET
                 s += to_pointBox.Text + "|";
                 s += dateTimePicker1.Value.ToShortDateString() + "|";
                 s += comboBox1.Text + ":";
-                s += comboBox2.Text;
+                s += comboBox2.Text + "\0";
+                chatBox.AppendText("Send to server: ");
                 updateUI(s);
+
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                stream.Write(data, 0, data.Length);
             }
             catch
             {
                 MessageBox.Show("Недопустимы пустые поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBox6.Text.Length == 0)
+                    throw new System.InvalidOperationException(""); 
+
+                string Str = textBox6.Text.Trim();
+                int Num;
+                bool isNum = int.TryParse(Str, out Num);
+                if (isNum)
+                {
+                    string s = "3|";
+                    s += textBox6.Text + "\0";
+                    chatBox.AppendText("Send to server: ");
+                    updateUI(s);
+
+                    byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                    stream.Write(data, 0, data.Length);
+                }
+                else
+                {
+                    throw new System.InvalidOperationException("");
+                }         
+            }
+            catch
+            {
+                MessageBox.Show("Недопустимое значение поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        { //тут проверочка
+            string s = "4|";
+            s += textBox1.Text + "|";
+            s += textBox2.Text + "|";
+            s += textBox3.Text + "|";
+            s += textBox4.Text + "\0";
+            chatBox.AppendText("Send to server: "); 
+            updateUI(s);
+
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+            stream.Write(data, 0, data.Length);
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {//тут проверочка
+            string s = "5|";
+            s += textBox5.Text + "\0";
+            chatBox.AppendText("Send to server: ");
+            updateUI(s);
+
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+            stream.Write(data, 0, data.Length);
         }
     }
 }

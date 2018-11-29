@@ -22,6 +22,7 @@ public:
 	void GetServerSettings();
 	void StartServer();
 	void StartListenning();
+	static void AddFlight(sqlite3 *,char * , int len);
 	static string ShowDB(sqlite3 *);
 	static DWORD WINAPI Func(LPVOID);
 };
@@ -75,51 +76,67 @@ string Server::ShowDB(sqlite3 *db)
 	sqlite3_stmt *stmt;
 	char query1[] = "SELECT * FROM flights;";
 	char query2[] = "SELECT * FROM passengers;";
-	DATA += "Flights:\n\r";
+	//формируем ответ 
+	DATA += "==========Flights==========\r\n";
 	if (sqlite3_prepare_v2(db, query1, -1, &stmt, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
 		{
-			char *id = (char *)sqlite3_column_text(stmt, 0);
-			DATA += id;
-			DATA += "|";
-			char *from_point = (char *)sqlite3_column_text(stmt, 1);
-			DATA += from_point;
-			DATA += "|";
-			char *to_point = (char *)sqlite3_column_text(stmt, 2);
-			DATA += to_point;
-			DATA += "|";
-			char *date = (char *)sqlite3_column_text(stmt, 3);
-			DATA += date;
-			DATA += "|";
-			char *time = (char *)sqlite3_column_text(stmt, 4);
-			DATA += time;
-			DATA += "|\n";
+			for (int i = 0; i < 5; ++i)
+			{
+				char *tmp = (char *)sqlite3_column_text(stmt, i);
+				DATA += tmp;
+				DATA += " | ";
+			}
+			DATA += "\r\n";
 		}
 	}
-	DATA += "Passengers:\n";
+	DATA += "==========Passengers==========\r\n";
 	if (sqlite3_prepare_v2(db, query2, -1, &stmt, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
 		{
-			char *id = (char *)sqlite3_column_text(stmt, 0);
-			DATA += id;
-			DATA += "|";
-			char *id1 = (char *)sqlite3_column_text(stmt, 1);
-			DATA += id1;
-			DATA += "|";
-			char *name1 = (char *)sqlite3_column_text(stmt, 2);
-			DATA += name1;
-			DATA += "|";
-			char *name2 = (char *)sqlite3_column_text(stmt, 3);
-			DATA += name2;
-			DATA += "|";
-			char *age = (char *)sqlite3_column_text(stmt, 4);
-			DATA += age;
-			DATA += "|\n";
+			for (int i = 0; i < 5; ++i)
+			{
+				char *tmp = (char *)sqlite3_column_text(stmt, i);
+				DATA += tmp;
+				DATA += " | ";
+			}
+			DATA += "\r\n";
 		}
 	}
 	return DATA;
+}
+
+void Server::AddFlight(sqlite3 *db, char *buf, int len)
+{
+	cout << "Получен запрос на добавление рейса: ";
+	for (int i = 0; i < len; ++i)
+	{
+		cout << buf[i];
+	}
+	cout << endl;
+
+	string str[4];
+	for (int i = 2, j = 0; i < len; ++i)
+	{
+		if (buf[i] == '|')
+		{
+			j++;
+			continue;
+		}
+		str[j] += buf[i];
+	}
+
+	char *err = 0;
+	string SQL = "insert into flights(from_point,to_point,date,time) values ('"+ str[0] +"','"+ str[1] +"','"+ str[2]+"','"+str[3]+"')";
+	
+	if (sqlite3_exec(db, SQL.c_str(), 0, 0, &err))
+	{
+		fprintf(stderr, "Ошибка SQL: %sn", err);
+		sqlite3_free(err);
+	}
+
 }
 
 DWORD WINAPI Server::Func(LPVOID client_socket)
@@ -139,7 +156,7 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 	send(my_sock, hi, sizeof(hi), 0);
 
 	int bytes_recv;
-	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
+	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) && 
 		bytes_recv != SOCKET_ERROR)
 	{
 		if (buff[0] == '0')
@@ -152,6 +169,10 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 		{
 			string a = ShowDB(db);
 			send(my_sock, a.c_str(), a.length(), 0);
+		}
+		if (buff[0] == '2')
+		{
+			AddFlight(db, &buff[0], strlen(buff));
 		}
 
 	}
