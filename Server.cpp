@@ -23,6 +23,9 @@ public:
 	void StartServer();
 	void StartListenning();
 	static void AddFlight(sqlite3 *,char * , int len);
+	static void DeleteFlight(sqlite3 *, char *, int len);
+	static void AddPassenger(sqlite3 *, char *, int len);
+	static void DeletePassenger(sqlite3 *, char *, int len);
 	static string ShowDB(sqlite3 *);
 	static DWORD WINAPI Func(LPVOID);
 };
@@ -77,7 +80,7 @@ string Server::ShowDB(sqlite3 *db)
 	char query1[] = "SELECT * FROM flights;";
 	char query2[] = "SELECT * FROM passengers;";
 	//формируем ответ 
-	DATA += "==========Flights==========\r\n";
+	DATA += "\r\n==========Flights==========\r\n";
 	if (sqlite3_prepare_v2(db, query1, -1, &stmt, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(stmt) == SQLITE_ROW) //пока в бд есть данные происходит считывание
@@ -111,7 +114,7 @@ string Server::ShowDB(sqlite3 *db)
 void Server::AddFlight(sqlite3 *db, char *buf, int len)
 {
 	cout << "Получен запрос на добавление рейса: ";
-	for (int i = 0; i < len; ++i)
+	for (int i = 2; i < len; ++i)
 	{
 		cout << buf[i];
 	}
@@ -136,6 +139,98 @@ void Server::AddFlight(sqlite3 *db, char *buf, int len)
 		fprintf(stderr, "Ошибка SQL: %sn", err);
 		sqlite3_free(err);
 	}
+
+}
+
+void Server::DeleteFlight(sqlite3 *db, char *buf, int len)
+{
+	cout << "Получен запрос на удаление рейса: ";
+	for (int i = 2; i < len; ++i)
+	{
+		cout << buf[i];
+	}
+	cout << endl;
+
+	string str;
+	for (int i = 2, j = 0; i < len; ++i)
+	{
+		str += buf[i];
+	}
+
+	char *err = 0;
+	string SQL = "DELETE FROM passengers WHERE id_flight="+str;
+
+	if (sqlite3_exec(db, SQL.c_str(), 0, 0, &err))
+	{
+		fprintf(stderr, "Ошибка SQL: %sn", err);
+		sqlite3_free(err);
+	}
+
+	char *err2 = 0;
+	string SQL2 = "DELETE FROM flights WHERE id_flight="+str;
+
+	if (sqlite3_exec(db, SQL2.c_str(), 0, 0, &err2))
+	{
+		fprintf(stderr, "Ошибка SQL: %sn", err);
+		sqlite3_free(err);
+	}
+
+}
+
+void Server::AddPassenger(sqlite3 *db, char *buf, int len)
+{
+	cout << "Получен запрос на добавление пассажира: ";
+	for (int i = 2; i < len; ++i)
+	{
+		cout << buf[i];
+	}
+	cout << endl;
+
+	string str[4];
+	for (int i = 2, j = 0; i < len; ++i)
+	{
+		if (buf[i] == '|')
+		{
+			j++;
+			continue;
+		}
+		str[j] += buf[i];
+	}
+
+	char *err = 0;
+	string SQL = "insert into passengers(id_flight,first_name,second_name,age) values ('" + str[0] + "','" + str[1] + "','" + str[2] + "','" + str[3] + "')";
+
+	if (sqlite3_exec(db, SQL.c_str(), 0, 0, &err))
+	{
+		fprintf(stderr, "Ошибка SQL: %sn", err);
+		sqlite3_free(err);
+	}
+}
+
+void Server::DeletePassenger(sqlite3 *db, char *buf, int len)
+{
+	cout << "Получен запрос на удаление пассажира: ";
+	for (int i = 2; i < len; ++i)
+	{
+		cout << buf[i];
+	}
+	cout << endl;
+
+	string str;
+	for (int i = 2, j = 0; i < len; ++i)
+	{
+		str += buf[i];
+	}
+
+	char *err = 0;
+	string SQL = "DELETE FROM passengers WHERE id_passenger=" + str;
+
+	if (sqlite3_exec(db, SQL.c_str(), 0, 0, &err))
+	{
+		fprintf(stderr, "Ошибка SQL: %sn", err);
+		sqlite3_free(err);
+	}
+
 
 }
 
@@ -174,6 +269,18 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 		{
 			AddFlight(db, &buff[0], strlen(buff));
 		}
+		if (buff[0] == '3')
+		{
+			DeleteFlight(db, &buff[0], strlen(buff));
+		}
+		if (buff[0] == '4')
+		{
+			AddPassenger(db, &buff[0], strlen(buff));
+		}
+		if (buff[0] == '5')
+		{
+			DeletePassenger(db, &buff[0], strlen(buff));
+		}
 
 	}
 	cout << "Соединение с сокетом клиента [" << my_sock << "] разорвано." << endl;
@@ -196,6 +303,4 @@ int main()
 	Server1.StartServer();
 	//Начинаем обработку подключений
 	Server1.StartListenning();
-	
-	
 }
