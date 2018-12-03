@@ -9,3 +9,13 @@ C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNE
 C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.pdb
 C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.csprojAssemblyReference.cache
 C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\ClientNET\ClientNET\obj\Debug\ClientNET.Form2.resources
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\bin\Debug\ClientNET.exe.config
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.exe
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.pdb
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\bin\Debug\ClientNET.exe
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\bin\Debug\ClientNET.pdb
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.Client.resources
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.Form2.resources
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.Properties.Resources.resources
+C:\Users\user\Desktop\лабы 5 семак\ТиМП\Kursovaya-master\Kursovaya-master\ClientNET\ClientNET\obj\Debug\ClientNET.csproj.GenerateResource.Cache

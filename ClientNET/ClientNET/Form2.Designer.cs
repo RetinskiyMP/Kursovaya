@@ -90,6 +90,7 @@
             this.Controls.Add(this.inputIP);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Подключение к серверу";
             this.Load += new System.EventHandler(this.Form2_Load);
             this.ResumeLayout(false);

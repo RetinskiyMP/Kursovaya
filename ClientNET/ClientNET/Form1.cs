@@ -82,28 +82,51 @@ namespace ClientNET
 
         private void информацияToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string s = "0";
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-            stream.Write(data, 0, data.Length);
-            tcpClient.Close();
-            updateUI("Disconnect.");
+            try
+            {
+                string s = "0";
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                stream.Write(data, 0, data.Length);
 
-            подключитьсяToolStripMenuItem.Enabled = true;
-            информацияToolStripMenuItem.Enabled = false;
-            tabControl1.Enabled = false;
-            ShowDB.Enabled = false;
+                tcpClient.Close();
+                updateUI("Disconnect.");
+
+                подключитьсяToolStripMenuItem.Enabled = true;
+                информацияToolStripMenuItem.Enabled = false;
+                tabControl1.Enabled = false;
+                ShowDB.Enabled = false;
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка сервера.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                подключитьсяToolStripMenuItem.Enabled = true;
+                информацияToolStripMenuItem.Enabled = false;
+                tabControl1.Enabled = false;
+                ShowDB.Enabled = false;
+            }
         }
 
         private void ShowDB_Click(object sender, EventArgs e)
         { //тут просто тру блок, вообще его на весь код в любой функции над
-            string s = "1";
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-            stream.Write(data, 0, data.Length);
+            try
+            {
+                string s = "1";
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                stream.Write(data, 0, data.Length);
 
-            byte[] data2 = new byte[1024];
-            int bytes = stream.Read(data2, 0, data2.Length); // получаем количество считанных байтов
-            string message = Encoding.ASCII.GetString(data2, 0, bytes);
-            chatBox.AppendText(message);
+                byte[] data2 = new byte[1048576];
+                int bytes = stream.Read(data2, 0, data2.Length); // получаем количество считанных байтов
+                string message = Encoding.ASCII.GetString(data2, 0, bytes);
+                chatBox.AppendText(message);
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка сервера.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                подключитьсяToolStripMenuItem.Enabled = true;
+                информацияToolStripMenuItem.Enabled = false;
+                tabControl1.Enabled = false;
+                ShowDB.Enabled = false;
+            }
         }
 
         private void groupBox3_Enter(object sender, EventArgs e)
@@ -143,7 +166,7 @@ namespace ClientNET
             try
             {
                 if (textBox6.Text.Length == 0)
-                    throw new System.InvalidOperationException(""); 
+                    throw new System.InvalidOperationException("");
 
                 string Str = textBox6.Text.Trim();
                 int Num;
@@ -154,14 +177,24 @@ namespace ClientNET
                     s += textBox6.Text + "\0";
                     chatBox.AppendText("Send to server: ");
                     updateUI(s);
-
-                    byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-                    stream.Write(data, 0, data.Length);
+                    try
+                    {
+                        byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                        stream.Write(data, 0, data.Length);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Невозможно отправить запрос. Проверьте подключение к серверу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        подключитьсяToolStripMenuItem.Enabled = true;
+                        информацияToolStripMenuItem.Enabled = false;
+                        tabControl1.Enabled = false;
+                        ShowDB.Enabled = false;
+                    }
                 }
                 else
                 {
                     throw new System.InvalidOperationException("");
-                }         
+                }
             }
             catch
             {
@@ -170,28 +203,131 @@ namespace ClientNET
         }
 
         private void button1_Click(object sender, EventArgs e)
-        { //тут проверочка
-            string s = "4|";
-            s += textBox1.Text + "|";
-            s += textBox2.Text + "|";
-            s += textBox3.Text + "|";
-            s += textBox4.Text + "\0";
-            chatBox.AppendText("Send to server: "); 
-            updateUI(s);
-
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-            stream.Write(data, 0, data.Length);
+        {
+            try
+            {
+                if (textBox1.Text.Length == 0 || textBox2.Text.Length == 0 ||
+                    textBox3.Text.Length == 0 || textBox4.Text.Length == 0)
+                    throw new System.InvalidOperationException("");
+                string s = "4|";
+                s += textBox4.Text + "|";
+                s += textBox1.Text + "|";
+                s += textBox2.Text + "|";
+                s += textBox3.Text + "\0";
+                chatBox.AppendText("Send to server: ");
+                updateUI(s);
+                try
+                {
+                    byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                    stream.Write(data, 0, data.Length);
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка сервера.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    подключитьсяToolStripMenuItem.Enabled = true;
+                    информацияToolStripMenuItem.Enabled = false;
+                    tabControl1.Enabled = false;
+                    ShowDB.Enabled = false;
+                }
+                }
+            catch
+            {
+                MessageBox.Show("Недопустимы пустые поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void button2_Click_1(object sender, EventArgs e)
-        {//тут проверочка
-            string s = "5|";
-            s += textBox5.Text + "\0";
-            chatBox.AppendText("Send to server: ");
-            updateUI(s);
+        {
+            try
+            {
+                if (textBox6.Text.Length == 0)
+                    throw new System.InvalidOperationException("");
 
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-            stream.Write(data, 0, data.Length);
+                string Str = textBox5.Text.Trim();
+                int Num;
+                bool isNum = int.TryParse(Str, out Num);
+                if (isNum)
+                {
+                    string s = "5|";
+                    s += textBox5.Text + "\0";
+                    chatBox.AppendText("Send to server: ");
+                    updateUI(s);
+                    try
+                    {
+                        byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                        stream.Write(data, 0, data.Length);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Невозможно отправить запрос. Проверьте подключение к серверу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        подключитьсяToolStripMenuItem.Enabled = true;
+                        информацияToolStripMenuItem.Enabled = false;
+                        tabControl1.Enabled = false;
+                        ShowDB.Enabled = false;
+                    }
+                }
+                else
+                {
+                    throw new System.InvalidOperationException("");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Недопустимое значение поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        }
+
+        private void from_pointBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && e.KeyChar != 45 && e.KeyChar != 32 && (e.KeyChar < 65 || e.KeyChar > 90) && (e.KeyChar < 97 || e.KeyChar > 122))
+                e.Handled = true;
+        }
+
+        private void to_pointBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && e.KeyChar != 45 && e.KeyChar != 32 && (e.KeyChar < 65 || e.KeyChar > 90) && (e.KeyChar < 97 || e.KeyChar > 122))
+                e.Handled = true;
+        }
+
+        private void textBox6_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && (e.KeyChar < 48 || e.KeyChar > 57))
+                e.Handled = true;
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && e.KeyChar != 45 && e.KeyChar != 32 && (e.KeyChar < 65 || e.KeyChar > 90) && (e.KeyChar < 97 || e.KeyChar > 122))
+                e.Handled = true;
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && e.KeyChar != 45 && e.KeyChar != 32 && (e.KeyChar < 65 || e.KeyChar > 90) && (e.KeyChar < 97 || e.KeyChar > 122))
+                e.Handled = true;
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && (e.KeyChar < 48 || e.KeyChar > 57))
+                e.Handled = true;
+        }
+
+        private void chatBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar > 0 )
+                e.Handled = true;
         }
     }
+    
 }
