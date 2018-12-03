@@ -86,12 +86,14 @@
             // 
             // chatBox
             // 
-            this.chatBox.Enabled = false;
             this.chatBox.Location = new System.Drawing.Point(20, 53);
             this.chatBox.Multiline = true;
             this.chatBox.Name = "chatBox";
+            this.chatBox.ReadOnly = true;
+            this.chatBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.chatBox.Size = new System.Drawing.Size(327, 334);
             this.chatBox.TabIndex = 5;
+            this.chatBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chatBox_KeyPress);
             // 
             // menuStrip1
             // 
@@ -206,9 +208,11 @@
             // textBox6
             // 
             this.textBox6.Location = new System.Drawing.Point(122, 24);
+            this.textBox6.MaxLength = 10;
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(85, 20);
             this.textBox6.TabIndex = 38;
+            this.textBox6.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
             // 
             // label10
             // 
@@ -272,6 +276,7 @@
             // 
             // comboBox2
             // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {
             "00",
@@ -290,6 +295,7 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(50, 21);
             this.comboBox2.TabIndex = 9;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -302,6 +308,8 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.BackColor = System.Drawing.SystemColors.Window;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "00",
@@ -332,6 +340,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(50, 21);
             this.comboBox1.TabIndex = 7;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -380,16 +389,20 @@
             // to_pointBox
             // 
             this.to_pointBox.Location = new System.Drawing.Point(106, 80);
+            this.to_pointBox.MaxLength = 30;
             this.to_pointBox.Name = "to_pointBox";
             this.to_pointBox.Size = new System.Drawing.Size(200, 20);
             this.to_pointBox.TabIndex = 1;
+            this.to_pointBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.to_pointBox_KeyPress);
             // 
             // from_pointBox
             // 
             this.from_pointBox.Location = new System.Drawing.Point(106, 44);
+            this.from_pointBox.MaxLength = 30;
             this.from_pointBox.Name = "from_pointBox";
             this.from_pointBox.Size = new System.Drawing.Size(200, 20);
             this.from_pointBox.TabIndex = 0;
+            this.from_pointBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.from_pointBox_KeyPress);
             // 
             // tabPage2
             // 
@@ -428,9 +441,11 @@
             // textBox5
             // 
             this.textBox5.Location = new System.Drawing.Point(137, 32);
+            this.textBox5.MaxLength = 10;
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(85, 20);
             this.textBox5.TabIndex = 36;
+            this.textBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
             // 
             // label9
             // 
@@ -462,9 +477,11 @@
             // textBox4
             // 
             this.textBox4.Location = new System.Drawing.Point(112, 149);
+            this.textBox4.MaxLength = 10;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(200, 20);
             this.textBox4.TabIndex = 35;
+            this.textBox4.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
             // 
             // label8
             // 
@@ -478,9 +495,11 @@
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(112, 114);
+            this.textBox3.MaxLength = 3;
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(200, 20);
             this.textBox3.TabIndex = 33;
+            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
             // 
             // button1
             // 
@@ -525,6 +544,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(200, 20);
             this.textBox2.TabIndex = 28;
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
             // textBox1
             // 
@@ -532,6 +552,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(200, 20);
             this.textBox1.TabIndex = 27;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // Client
             // 
@@ -545,7 +566,10 @@
             this.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximumSize = new System.Drawing.Size(816, 489);
+            this.MinimumSize = new System.Drawing.Size(816, 489);
             this.Name = "Client";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "АЭРОПОРТ";
             this.TransparencyKey = System.Drawing.Color.DeepPink;
             this.Load += new System.EventHandler(this.Client_Load);
@@ -584,7 +608,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
@@ -614,6 +637,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 
