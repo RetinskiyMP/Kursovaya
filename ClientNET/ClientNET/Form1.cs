@@ -152,9 +152,19 @@ namespace ClientNET
                 chatBox.AppendText("Send to server: ");
                 updateUI(s);
 
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
-                stream.Write(data, 0, data.Length);
-            }
+                try
+                {
+                    byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
+                    stream.Write(data, 0, data.Length);
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка сервера.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    подключитьсяToolStripMenuItem.Enabled = true;
+                    информацияToolStripMenuItem.Enabled = false;
+                    tabControl1.Enabled = false;
+                    ShowDB.Enabled = false;}
+                }
             catch
             {
                 MessageBox.Show("Недопустимы пустые поля.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -240,7 +250,7 @@ namespace ClientNET
         {
             try
             {
-                if (textBox6.Text.Length == 0)
+                if (textBox5.Text.Length == 0)
                     throw new System.InvalidOperationException("");
 
                 string Str = textBox5.Text.Trim();

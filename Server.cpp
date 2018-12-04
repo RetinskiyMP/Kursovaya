@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include <WinSock2.h> //сокеты 
-#include <WS2tcpip.h> //функции для сервера 
+#include <WinSock2.h> //сокеты
+#include <WS2tcpip.h> //функции для сервера
 #include "sqlite3.h"
 #pragma comment(lib, "sqlite3.lib")
 #pragma comment(lib, "ws2_32.lib")
@@ -11,6 +11,7 @@ using namespace std;
 class Server
 {
 private:
+	int err; //для проверок
 	SOCKET s;//Для сервера
 	WSADATA WsaData;
 	SOCKADDR_IN sin;
@@ -37,27 +38,54 @@ Server::~Server()
 
 void Server::GetServerSettings()
 {
-	WSAStartup(0x0101, &WsaData); //Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
-	
-	s = socket(AF_INET, SOCK_STREAM, 0); //Теперь объявление переменную типа SOCKET
+	try
+	{
+		
+		WSAStartup(0x0101, &WsaData); //Инициализируем процесс библиотеки ws2_32, вызвав функцию WSAStartup
 
-	//Задаем параметры для сокета(сервера)
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(7770);
-	sin.sin_addr.s_addr = INADDR_ANY;
+		s = socket(AF_INET, SOCK_STREAM, 0); //Теперь объявление переменную типа SOCKET
+		if (s == -1) throw - 1;
+		//Задаем параметры для сокета(сервера)
+		sin.sin_family = AF_INET;
+		sin.sin_port = htons(7770);
+		sin.sin_addr.s_addr = INADDR_ANY;
+	}
+	catch (int i)
+	{
+		cout << "Обнаружена ошибка в ходе работы функции socket, s  = " << i << endl;
+		exit(0);
+	}
 
 	cout << "Сервер успешно настроен." << endl;
 }
 
 void Server::StartServer()
 {
-	bind(s, (LPSOCKADDR)&sin, sizeof(sin));
+	try
+	{
+		err = bind(s, (LPSOCKADDR)&sin, sizeof(sin));
+		if (err == -1) throw - 1;
+	}
+	catch (int i)
+	{
+		cout << "Обнаружена ошибка при системном вызове bind, err  = " << i << endl;
+		exit(0);
+	}
 	cout << "Сервер успешно запущен." << endl;
 }
 
 void Server::StartListenning()
 {
-	listen(s, SOMAXCONN); //Ждем подключений
+	try 
+	{		
+		err = listen(s, SOMAXCONN); //Ждем подключений
+		if (err == -1) throw - 1;
+	}
+	catch (int i)
+	{
+		cout << "Обнаружена ошибка при системном вызове listen, err  = " << i << endl;
+		exit(0);
+	}
 
 	int client_addr_size = sizeof(client_addr);
 
@@ -79,7 +107,7 @@ string Server::ShowDB(sqlite3 *db)
 	sqlite3_stmt *stmt;
 	char query1[] = "SELECT * FROM flights;";
 	char query2[] = "SELECT * FROM passengers;";
-	//формируем ответ 
+	//формируем ответ
 	DATA += "\r\n==========Flights==========\r\n";
 	if (sqlite3_prepare_v2(db, query1, -1, &stmt, 0) == SQLITE_OK)
 	{
@@ -133,7 +161,7 @@ void Server::AddFlight(sqlite3 *db, char *buf, int len)
 
 	char *err = 0;
 	string SQL = "insert into flights(from_point,to_point,date,time) values ('"+ str[0] +"','"+ str[1] +"','"+ str[2]+"','"+str[3]+"')";
-	
+
 	if (sqlite3_exec(db, SQL.c_str(), 0, 0, &err))
 	{
 		fprintf(stderr, "Ошибка SQL: %sn", err);
@@ -240,7 +268,7 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 	sqlite3 *db; // хэндл объекта соединение к БД
 	if (sqlite3_open("database.dblite", &db))
 		fprintf(stderr, "Ошибка открытия/создания БД: %s\n", sqlite3_errmsg(db));
-	
+
 	//получение сокета клиента
 	SOCKET my_sock;
 	my_sock = ((SOCKET *)client_socket)[0];
@@ -251,7 +279,7 @@ DWORD WINAPI Server::Func(LPVOID client_socket)
 	send(my_sock, hi, sizeof(hi), 0);
 
 	int bytes_recv;
-	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) && 
+	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
 		bytes_recv != SOCKET_ERROR)
 	{
 		if (buff[0] == '0')
@@ -295,7 +323,7 @@ int main()
 {
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
-	
+
 	Server Server1;
 	//Получаем настройки сокета для сервера
 	Server1.GetServerSettings();
