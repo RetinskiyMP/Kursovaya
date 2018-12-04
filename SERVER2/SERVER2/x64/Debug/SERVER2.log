@@ -1,0 +1,9 @@
+﻿  SERVER2.cpp
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_close в функции main
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_open в функции main
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_errmsg в функции main
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_prepare_v2 в функции main
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_step в функции main
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_column_text в функции main
+sqlite3.lib : warning LNK4272: тип компьютера библиотеки "x86" конфликтует с типом целевого компьютера "x64"
+C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\SERVER2\x64\Debug\SERVER2.exe : fatal error LNK1120: неразрешенных внешних элементов: 6
