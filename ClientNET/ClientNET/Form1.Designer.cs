@@ -33,7 +33,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.подключитьсяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.информацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.информацияToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ShowDB = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -99,8 +98,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.подключитьсяToolStripMenuItem,
-            this.информацияToolStripMenuItem,
-            this.информацияToolStripMenuItem1});
+            this.информацияToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -121,12 +119,6 @@
             this.информацияToolStripMenuItem.Size = new System.Drawing.Size(155, 20);
             this.информацияToolStripMenuItem.Text = "Отключиться от сервера";
             this.информацияToolStripMenuItem.Click += new System.EventHandler(this.информацияToolStripMenuItem_Click);
-            // 
-            // информацияToolStripMenuItem1
-            // 
-            this.информацияToolStripMenuItem1.Name = "информацияToolStripMenuItem1";
-            this.информацияToolStripMenuItem1.Size = new System.Drawing.Size(93, 20);
-            this.информацияToolStripMenuItem1.Text = "Информация";
             // 
             // groupBox1
             // 
@@ -599,7 +591,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem подключитьсяToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem информацияToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem информацияToolStripMenuItem1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button ShowDB;
         private System.Windows.Forms.GroupBox groupBox2;
