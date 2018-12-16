@@ -1,0 +1,12 @@
+﻿  pch.cpp
+  SERVER2.cpp
+c:\users\.etsu\desktop\kursovaya-master\server2\server2\server2.cpp(294): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_exec в функции "public: static void __cdecl Server::AddFlight(struct sqlite3 *,char *,int)" (?AddFlight@Server@@SAXPEAUsqlite3@@PEADH@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_free в функции "public: static void __cdecl Server::AddFlight(struct sqlite3 *,char *,int)" (?AddFlight@Server@@SAXPEAUsqlite3@@PEADH@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_open в функции "public: static unsigned long __cdecl Server::Func(void *)" (?Func@Server@@SAKPEAX@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_errmsg в функции "public: static unsigned long __cdecl Server::Func(void *)" (?Func@Server@@SAKPEAX@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_prepare_v2 в функции "public: static class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Server::ShowDB(struct sqlite3 *)" (?ShowDB@Server@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAUsqlite3@@@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_step в функции "public: static class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Server::ShowDB(struct sqlite3 *)" (?ShowDB@Server@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAUsqlite3@@@Z)
+SERVER2.obj : error LNK2019: ссылка на неразрешенный внешний символ sqlite3_column_text в функции "public: static class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Server::ShowDB(struct sqlite3 *)" (?ShowDB@Server@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAUsqlite3@@@Z)
+sqlite3.lib : warning LNK4272: тип компьютера библиотеки "x86" конфликтует с типом целевого компьютера "x64"
+C:\Users\.etsu\Desktop\Kursovaya-master\SERVER2\x64\Debug\SERVER2.exe : fatal error LNK1120: неразрешенных внешних элементов: 7
