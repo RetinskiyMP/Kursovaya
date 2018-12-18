@@ -48,7 +48,7 @@ namespace ClientNET
                 byte[] data = new byte[256];
                 int bytes = stream.Read(data, 0, data.Length); // получаем количество считанных байтов
                 string message = Encoding.ASCII.GetString(data, 0, bytes);
-                chatBox.AppendText(message);
+                chatBox.AppendText("S => "+message);
 
                 подключитьсяToolStripMenuItem.Enabled = false;
                 tabControl1.Enabled = true;
@@ -113,11 +113,12 @@ namespace ClientNET
                 string s = "1";
                 byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
                 stream.Write(data, 0, data.Length);
+                chatBox.AppendText("S <= " + s + "\r\n");
 
-                byte[] data2 = new byte[1048576];
+                byte[] data2 = new byte[1024];
                 int bytes = stream.Read(data2, 0, data2.Length); // получаем количество считанных байтов
                 string message = Encoding.ASCII.GetString(data2, 0, bytes);
-                chatBox.AppendText(message);
+                chatBox.AppendText("S => "+message);
             }
             catch
             {
@@ -148,14 +149,18 @@ namespace ClientNET
                 s += to_pointBox.Text + "|";
                 s += dateTimePicker1.Value.ToShortDateString() + "|";
                 s += comboBox1.Text + ":";
-                s += comboBox2.Text + "\0";
-                chatBox.AppendText("Send to server: ");
-                updateUI(s);
+                s += comboBox2.Text;
+                chatBox.AppendText("S <= " + s + "\r\n");
 
                 try
                 {
                     byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
                     stream.Write(data, 0, data.Length);
+
+                    byte[] data2 = new byte[1024];
+                    int bytes = stream.Read(data2, 0, data2.Length);// получаем количество считанных байтов
+                    string message = Encoding.ASCII.GetString(data2, 0, bytes);
+                    chatBox.AppendText("S => "+message);
                 }
                 catch
                 {
@@ -184,13 +189,17 @@ namespace ClientNET
                 if (isNum)
                 {
                     string s = "3|";
-                    s += textBox6.Text + "\0";
-                    chatBox.AppendText("Send to server: ");
-                    updateUI(s);
+                    s += textBox6.Text;
+                    chatBox.AppendText("S <= " + s + "\r\n");
                     try
                     {
                         byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
                         stream.Write(data, 0, data.Length);
+
+                        byte[] data2 = new byte[1024];
+                        int bytes = stream.Read(data2, 0, data2.Length);// получаем количество считанных байтов
+                        string message = Encoding.ASCII.GetString(data2, 0, bytes);
+                        chatBox.AppendText("S=> " + message);
                     }
                     catch
                     {
@@ -223,13 +232,17 @@ namespace ClientNET
                 s += textBox4.Text + "|";
                 s += textBox1.Text + "|";
                 s += textBox2.Text + "|";
-                s += textBox3.Text + "\0";
-                chatBox.AppendText("Send to server: ");
-                updateUI(s);
+                s += textBox3.Text;
+                chatBox.AppendText("S <= " + s + "\r\n");
                 try
                 {
                     byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
                     stream.Write(data, 0, data.Length);
+
+                    byte[] data2 = new byte[1024];
+                    int bytes = stream.Read(data2, 0, data2.Length);// получаем количество считанных байтов
+                    string message = Encoding.ASCII.GetString(data2, 0, bytes);
+                    chatBox.AppendText("S => " + message);
                 }
                 catch
                 {
@@ -259,13 +272,17 @@ namespace ClientNET
                 if (isNum)
                 {
                     string s = "5|";
-                    s += textBox5.Text + "\0";
-                    chatBox.AppendText("Send to server: ");
-                    updateUI(s);
+                    s += textBox5.Text;
+                    chatBox.AppendText("S <= " + s + "\r\n");
                     try
                     {
                         byte[] data = System.Text.Encoding.ASCII.GetBytes(s);
                         stream.Write(data, 0, data.Length);
+
+                        byte[] data2 = new byte[1024];
+                        int bytes = stream.Read(data2, 0, data2.Length);// получаем количество считанных байтов
+                        string message = Encoding.ASCII.GetString(data2, 0, bytes);
+                        chatBox.AppendText("S => " + message);
                     }
                     catch
                     {
