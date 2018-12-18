@@ -1,0 +1,3 @@
+﻿  TestingMenyParalClients.cpp
+c:\users\.etsu\desktop\cloud\курсач\testingmenyparalclients\testingmenyparalclients\testingmenyparalclients.cpp(40): warning C4101: hThreads: неиспользованная локальная переменная
+  TestingMenyParalClients.vcxproj -> C:\Users\.etsu\Desktop\CLOUD\КУРСАЧ\TestingMenyParalClients\Debug\TestingMenyParalClients.exe
